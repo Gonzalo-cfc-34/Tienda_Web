@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexParts | Catálogo de Repuestos Automotrices</title>
+    <link rel="stylesheet" href="index.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <!-- HEADER / BARRA DE NAVEGACIÓN -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i data-lucide="gauge"></i>
+                </div>
+                <div>
+                    <span class="brand-title">APEX<span class="accent">PARTS</span></span>
+                    <span class="brand-subtitle">RACING & OEM SOLUTIONS</span>
+                </div>
+            </div>
+
+            <!-- Buscador de Cabecera -->
+            <div class="search-box">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Buscar por repuesto, código OEM o vehículo...">
+                <button id="clearSearchBtn" class="clear-btn" aria-label="Limpiar búsqueda">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <!-- Acciones de Cabecera -->
+            <div class="nav-actions">
+                <button id="cartBtn" class="cart-trigger" aria-label="Ver carrito">
+                    <i data-lucide="shopping-cart"></i>
+                    <span class="cart-text">Carrito</span>
+                    <span id="cartCountBadge" class="badge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL: SIDEBAR IZQUIERDA + CATÁLOGO DERECHA -->
+    <div class="main-wrapper">
+
+        <!-- BARRA LATERAL DE FILTROS (IZQUIERDA) -->
+        <aside class="sidebar" id="filterSidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-header">
+                    <div class="sidebar-title">
+                        <i data-lucide="sliders-horizontal"></i>
+                        <span>Filtros</span>
+                    </div>
+                    <button id="resetFiltersBtn" class="link-btn">Restablecer</button>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Categoría</label>
+                    <div class="pill-group" id="categoryFilterContainer">
+                        <button class="pill active" data-category="all">Todas</button>
+                        <button class="pill" data-category="Frenos">Frenos</button>
+                        <button class="pill" data-category="Suspensión">Suspensión</button>
+                        <button class="pill" data-category="Motor">Motor</button>
+                        <button class="pill" data-category="Transmisión">Transmisión</button>
+                        <button class="pill" data-category="Eléctrico">Eléctrico</button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="brandSelect">Marca Compatible</label>
+                    <select id="brandSelect" class="custom-select">
+                        <option value="all">Todas las marcas</option>
+                        <option value="Toyota">Toyota</option>
+                        <option value="Nissan">Nissan</option>
+                        <option value="Honda">Honda</option>
+                        <option value="Subaru">Subaru</option>
+                        <option value="Mitsubishi">Mitsubishi</option>
+                        <option value="Universal">Universal</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <div class="range-header">
+                        <label class="filter-label">Precio Máximo</label>
+                        <span id="priceValue" class="range-display">S/ 1,500</span>
+                    </div>
+                    <input type="range" id="priceRange" min="50" max="1500" step="25" value="1500" class="custom-range">
+                    <div class="range-limits">
+                        <span>S/ 50</span>
+                        <span>S/ 1,500</span>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="stockOnlyCheckbox">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-label">Solo repuestos en stock</span>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ÁREA DE PRODUCTOS (DERECHA) -->
+        <main class="content-area">
+
+            <!-- Barra superior de catálogo: Contador y Ordenamiento -->
+            <div class="catalog-toolbar">
+                <div class="results-count">
+                    Mostrando <span id="visibleCount" class="accent-bold">0</span> repuestos disponibles
+                </div>
+
+                <div class="sort-wrapper">
+                    <label for="sortSelect">Ordenar por:</label>
+                    <select id="sortSelect" class="custom-select-sm">
+                        <option value="featured">Destacados</option>
+                        <option value="price-asc">Precio: Menor a Mayor</option>
+                        <option value="price-desc">Precio: Mayor a Menor</option>
+                        <option value="name-asc">Nombre: A - Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Grilla de Tarjetas -->
+            <section id="productsGrid" class="products-grid">
+                <!-- Renderizado dinámicamente con JavaScript -->
+            </section>
+
+            <!-- Mensaje de Estado Vacío -->
+            <div id="noResults" class="empty-state hidden">
+                <div class="empty-icon">
+                    <i data-lucide="package-x"></i>
+                </div>
+                <h3>No encontramos piezas con esos criterios</h3>
+                <p>Prueba ajustando los filtros de búsqueda o restablece para ver todo el catálogo.</p>
+                <button id="emptyResetBtn" class="btn-primary">Ver todos los repuestos</button>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- DRAWER / CARRITO LATERAL DESLIZABLE -->
+    <div id="cartOverlay" class="cart-overlay"></div>
+    <aside id="cartDrawer" class="cart-drawer">
+        <div class="cart-header">
+            <div class="cart-header-title">
+                <i data-lucide="shopping-bag"></i>
+                <h2>Tu Carrito</h2>
+            </div>
+            <button id="closeCartBtn" class="close-btn" aria-label="Cerrar carrito">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+
+        <!-- Items del carrito -->
+        <div id="cartItemsList" class="cart-items">
+            <!-- Inyectado por JS -->
+        </div>
+
+        <!-- Footer y Totales -->
+        <div class="cart-footer">
+            <div class="cart-summary-line">
+                <span>Subtotal</span>
+                <span id="cartSubtotal">S/ 0.00</span>
+            </div>
+            <div class="cart-summary-line highlight">
+                <span>Total Estimado</span>
+                <span id="cartTotal">S/ 0.00</span>
+            </div>
+
+            <div class="cart-actions">
+                <button id="whatsappCheckoutBtn" class="btn-primary btn-block">
+                    <i data-lucide="send"></i>
+                    <span>Pedir por WhatsApp</span>
+                </button>
+                <button id="clearCartBtn" class="btn-secondary btn-block">Vaciar Carrito</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- NOTIFICACIÓN TOAST -->
+    <div id="toastNotification" class="toast">
+        <i data-lucide="check-circle" class="toast-icon"></i>
+        <span id="toastMessage">Producto añadido al carrito</span>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
